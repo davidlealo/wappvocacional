@@ -23,6 +23,7 @@ function buildContextBlock(items) {
 
 /**
  * Llama a OpenAI con system + contexto + mensaje del usuario
+ * Export: default
  */
 export default async function openAiService(userMessage) {
   const topK = await retrieveRelevant(userMessage, 6);
@@ -71,4 +72,11 @@ ${contextBlock}
   const data = await resp.json();
   const answer = data?.choices?.[0]?.message?.content?.trim() || 'Lo siento, no tengo una respuesta por ahora.';
   return answer;
+}
+
+/**
+ * Export named opcional, por si prefieres import { openAiService }
+ */
+export async function openAiServiceFn(userMessage) {
+  return openAiService(userMessage);
 }

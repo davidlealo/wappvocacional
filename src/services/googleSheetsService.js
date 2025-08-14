@@ -28,8 +28,9 @@ async function addRowToSheet(auth, spreadsheetId, range, values) {
 
 /**
  * Agrega una fila a la hoja de LOG definida en .env
+ * Export: default + named
  */
-async function appendToSheet(data) {
+export async function appendToSheet(data) {
   try {
     const auth = getAuth();
     const authClient = await auth.getClient();
@@ -37,9 +38,9 @@ async function appendToSheet(data) {
     const tabName = process.env.SHEETS_TAB_NAME || 'chats';
 
     await addRowToSheet(authClient, spreadsheetId, tabName, data);
-    return 'Datos correctamente agregados';
+    return 'OK';
   } catch (error) {
-    console.error('[GoogleSheets] Error append:', error?.message || error);
+    console.error('[GoogleSheets] appendToSheet:', error?.message || error);
     throw error;
   }
 }
@@ -47,8 +48,8 @@ async function appendToSheet(data) {
 /**
  * Lee un rango A1 de un spreadsheet
  * @param {string} spreadsheetId
- * @param {string} rangeA1  (p.ej. 'Preguntas!A1:C1000')
- * @returns {Promise<string[][]>} valores
+ * @param {string} rangeA1  (p.ej. 'Preguntas!A1:C10000')
+ * Export: named
  */
 export async function readSheetRange(spreadsheetId, rangeA1) {
   try {
@@ -62,7 +63,7 @@ export async function readSheetRange(spreadsheetId, rangeA1) {
     });
     return res.data.values || [];
   } catch (error) {
-    console.error('[GoogleSheets] Error read:', error?.message || error);
+    console.error('[GoogleSheets] readSheetRange:', error?.message || error);
     return [];
   }
 }

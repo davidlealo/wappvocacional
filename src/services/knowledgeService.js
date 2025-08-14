@@ -19,10 +19,8 @@ function norm(s) {
  */
 function rowsToQA(rows) {
   if (!rows || rows.length === 0) return [];
-  // Si la primera fila es encabezado, la saltamos si reconoce "pregunta"/"respuesta"
   const [h0 = '', h1 = ''] = rows[0] || [];
   const looksHeader = norm(h0).includes('pregun') || norm(h1).includes('respu');
-
   const dataRows = looksHeader ? rows.slice(1) : rows;
 
   return dataRows
@@ -41,11 +39,10 @@ function readFromExcel() {
   const excelPath = process.env.KNOWLEDGE_EXCEL_PATH || 'src/data/Preguntas IA.xlsx';
   const full = path.isAbsolute(excelPath) ? excelPath : path.join(process.cwd(), excelPath);
   if (!fs.existsSync(full)) {
-    console.warn('[Knowledge] Excel no encontrado en', full);
+    console.warn('[Knowledge] Excel no encontrado:', full);
     return [];
   }
   const wb = XLSX.readFile(full);
-  // Toma la primera hoja
   const firstSheetName = wb.SheetNames[0];
   const sheet = wb.Sheets[firstSheetName];
   const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
@@ -67,7 +64,8 @@ async function readFromGoogle() {
 }
 
 /**
- * Obtiene el corpus actualizado (cacheado 10 min)
+ * Obtiene el corpus (cacheado 10 min)
+ * Export: named
  */
 export async function getKnowledge() {
   const now = Date.now();
@@ -77,19 +75,18 @@ export async function getKnowledge() {
 
   const source = (process.env.KNOWLEDGE_SOURCE || 'excel').toLowerCase();
   let rows = [];
-  if (source === 'google') {
-    rows = await readFromGoogle();
-  } else {
-    rows = readFromExcel();
-  }
+  if (source === 'google') rows = await readFromGoogle();
+  else rows = readFromExcel();
+
   cache = { rows, ts: now };
   return rows;
 }
 
 /**
- * Recupera K entradas más relevantes comparando solapamiento de tokens
+ * Recupera K entradas más relevantes
+ * Export: named
  */
-export async function retrieveRelevant(userQuery, k = 5) {
+export async function retrieveRelevant(userQuery, k = 6) {
   const corpus = await getKnowledge();
   const uq = norm(userQuery);
   const uqTokens = new Set(uq.split(/\W+/).filter(Boolean));
@@ -107,3 +104,9 @@ export async function retrieveRelevant(userQuery, k = 5) {
     .slice(0, k)
     .map((x) => x.item);
 }
+
+/**
+ * Export default: objeto con helpers (opcional)
+ */
+const KnowledgeAPI = { getKnowledge, retrieveRelevant };
+export default KnowledgeAPI;
