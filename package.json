@@ -1,0 +1,33 @@
+{
+  "name": "pillnow",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "David Leal",
+  "license": "ISC",
+  "description": "Prototipo pillnow, aistsente para enfermeras y pacientes post operatorios ",
+  "dependencies": {
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "googleapis": "^144.0.0",
+    "openai": "^4.68.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidlealo/pillnow_asistente.git"
+  },
+  "bugs": {
+    "url": "https://github.com/davidlealo/pillnow_asistente/issues"
+  },
+  "homepage": "https://github.com/davidlealo/pillnow_asistente#readme"
+}
