@@ -140,3 +140,4 @@ dist
 src/credentials/credentials.json
 .DS_Store
 .vercel
+src/services/Preguntas IA.xlsx
